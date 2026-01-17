@@ -36,3 +36,14 @@ AZURE_STORAGE_ACCOUNT_BLOB=
 - Telegram API credentials (API ID and API hash)
 
 You can obtain your Telegram API ID and API hash by creating an application at: https://my.telegram.org, **API development tools**
+
+
+## Azure Configuration
+Within `azure/` folder, terraform scripts are provided to spawn a storage account with a BLOB (Binary Large OBject) storage inside. In order to allocate storage, run:
+
+```bash
+terraform init
+terraform apply -auto-approve
+```
+
+Before using Azure as a backup site, ensure that the required access permissions and credentials are properly configured so the application can authenticate and write to the Blob Storage.
