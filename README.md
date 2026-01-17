@@ -1,6 +1,6 @@
-# telegram-scraper
+# tgscraper
 
-**telegram-scraper** allows you to authenticate to the Telegram servers as a user and operate on public chats and groups.
+**tgscraper** allows you to authenticate to the Telegram servers as a user and operate on public chats and groups.
 
 The tool supports exporting messages, users, and media (such as photos), as well as deleting messages sent by the authenticated user.
 
