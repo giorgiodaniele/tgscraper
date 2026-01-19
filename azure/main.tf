@@ -42,8 +42,14 @@ resource "azurerm_storage_account" "bucket_sa" {
 }
 
 
-resource "azurerm_storage_container" "bucket" {
-     name                  = "blobstorage"
+resource "azurerm_storage_container" "messages_bucket" {
+     name                  = "messages"
+     storage_account_name  = azurerm_storage_account.bucket_sa.name
+     container_access_type = "private"
+}
+
+resource "azurerm_storage_container" "users_bucket" {
+     name                  = "users"
      storage_account_name  = azurerm_storage_account.bucket_sa.name
      container_access_type = "private"
 }

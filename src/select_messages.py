@@ -5,16 +5,22 @@ import telethon
 import datetime
 import dotenv
 import pandas
+import azure_integration
 from   pathlib import Path
 
 dotenv.load_dotenv()
 
+# Core
 TELEGRAM_API_ID    = os.environ["TELEGRAM_API_ID"]
 TELEGRAM_API_HASH  = os.environ["TELEGRAM_API_HASH"]
 TELEGRAM_CHAT_NAME = os.environ["TELEGRAM_CHAT_NAME"]
 TS                 = os.environ["TS"]
 TE                 = os.environ["TE"]
 
+# Azure
+AZURE_ENABLED              = os.environ["AZURE_ENABLED"]
+AZURE_STORAGE_ACCOUNT      = os.environ["AZURE_STORAGE_ACCOUNT"]
+AZURE_STORAGE_ACCOUNT_BLOB = os.environ["AZURE_STORAGE_ACCOUNT_BLOB"]
 
 def parse_utc(value):
      if not value:
@@ -56,28 +62,24 @@ async def action(client: telethon.TelegramClient, target, chat_name):
      data = pandas.DataFrame(
           [
                {
-                    "id"        : r.id,
-                    "username"  : r.username,
-                    "first_name": r.first_name,
-                    "last_name" : r.last_name,
-                    "phone"     : r.phone,
-                    "bot"       : r.bot,
+                    "id"    : r.id,
+                    "date"  : r.date,
+                    "text"  : r.message,
+                    "sender": r.from_id.user_id,
                }
-               for r in records
+               for r in records if r.message
           ],
-          columns=[
-               "id",
-               "username",
-               "first_name",
-               "last_name",
-               "phone",
-               "bot",
-          ],
+          columns=["id", "date", "text", "sender"],
      )
 
      # ... and save on disk
-     path = folder / f"{chat_name}_users_{ts}_{te}.csv"
+     path = folder / f"{chat_name}_messages.csv"
      data.to_csv(path, index=False)
+
+
+     if AZURE_ENABLED and AZURE_ENABLED == "true":
+          container = azure_integration.container(AZURE_STORAGE_ACCOUNT, AZURE_STORAGE_ACCOUNT_BLOB)
+          azure_integration.upload_blob(container, path)
 
      return len(data)
 
