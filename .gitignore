@@ -3,6 +3,5 @@ out
 __pycache__
 telegram_*
 *.csv
-.env
 azure/.terraform*
 azure/terraform*
